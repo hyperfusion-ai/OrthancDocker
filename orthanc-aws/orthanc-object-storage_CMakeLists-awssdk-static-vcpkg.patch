@@ -1,0 +1,24 @@
+diff -r 7ddd840563c9 Aws/CMakeLists.txt
+--- a/Aws/CMakeLists.txt	Tue Nov 10 14:14:24 2020 +0100
++++ b/Aws/CMakeLists.txt	Wed Dec 23 11:10:04 2020 +0100
+@@ -45,7 +45,19 @@
+ 
+ if (USE_VCPKG_PACKAGES)
+   find_package(cryptopp CONFIG REQUIRED)
+-  find_package(AWSSDK REQUIRED COMPONENTS s3)
++
++  # find_package(AWSSDK REQUIRED COMPONENTS s3)
++  set(AWSSDK_BINARY_DIR /root/aws/builds/aws-sdk-cpp)
++  set(AWSSDK_LINK_LIBRARIES
++    ${AWSSDK_BINARY_DIR}/aws-cpp-sdk-s3/libaws-cpp-sdk-s3.a
++    ${AWSSDK_BINARY_DIR}/aws-cpp-sdk-core/libaws-cpp-sdk-core.a
++    ${AWSSDK_BINARY_DIR}/.deps/install/lib/libaws-c-event-stream.a
++    ${AWSSDK_BINARY_DIR}/.deps/install/lib/libaws-checksums.a
++    ${AWSSDK_BINARY_DIR}/.deps/install/lib/libaws-c-common.a
++    curl
++    crypto
++    )
++
+   include_directories(${WASTORAGE_INCLUDE_DIR})
+   set(CRYPTOPP_LIBRARIES cryptopp-static)
+ else()

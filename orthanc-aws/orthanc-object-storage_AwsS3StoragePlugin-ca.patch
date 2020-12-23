@@ -1,0 +1,25 @@
+diff -r 7ddd840563c9 Aws/AwsS3StoragePlugin.cpp
+--- a/Aws/AwsS3StoragePlugin.cpp	Tue Nov 10 14:14:24 2020 +0100
++++ b/Aws/AwsS3StoragePlugin.cpp	Wed Dec 23 11:39:42 2020 +0100
+@@ -230,7 +230,8 @@
+   unsigned int connectTimeout = pluginSection.GetUnsignedIntegerValue("ConnectTimeout", 30);
+   unsigned int requestTimeout = pluginSection.GetUnsignedIntegerValue("RequestTimeout", 1200);
+   bool virtualAddressing = pluginSection.GetBooleanValue("VirtualAddressing", true);
+-  
++  std::string caFile = pluginSection.GetStringValue("caFile", "");
++
+   try
+   {
+     Aws::SDKOptions options;
+@@ -249,6 +250,11 @@
+       configuration.endpointOverride = endpoint.c_str();
+     }
+ 
++    if (!caFile.empty())
++    {
++      configuration.caFile = caFile.c_str();
++    }
++
+     Aws::S3::S3Client client(credentials, configuration, Aws::Client::AWSAuthV4Signer::PayloadSigningPolicy::Never, virtualAddressing);
+ 
+     OrthancPlugins::LogInfo("AWS S3 storage initialized");

@@ -20,6 +20,18 @@ VOLUME [ "/var/lib/orthanc/db" ]
 EXPOSE 4242
 EXPOSE 8042
 
+# Check if useradd is installed, if not install it
+RUN which useradd || apt-get update && apt-get install -y passwd
+
+# Check if user with UID 1000 exists, if not create one
+RUN id -u 1000 &>/dev/null || useradd -u 1000 -m orthanc
+
+# Give the user with UID 1000 permissions for the application files
+RUN chown -R 1000:1000 /root /etc/orthanc /var/lib/orthanc
+
+# Switch to the user with UID 1000
+USER 1000
+
 ENTRYPOINT [ "Orthanc" ]
 CMD [ "/etc/orthanc/" ]
 
